@@ -1,7 +1,7 @@
 oo7-react
 =========
 
-A small library to provide integration between React and `Bond`s.
+A small library to provide integration between React and [`Bond`s](https://github.com/ethcore/oo7#oo7).
 
 Provides two React components: `ReactiveComponent` and `Reactive`. The first
 provides an alternative to `React.Component` for classes whose state shall
@@ -18,47 +18,47 @@ The element will stay updated to the latest value of each expression.
 ## Installation
 
 ```sh
-  npm install oo7-react --save
+npm install oo7-react --save
 ```
 
 ## Usage
 
 ```javascript
-  // Assume React is already required.
-  var oo7react = require('oo7-react'),
-      setupBonds = oo7parity.setupBonds,
-	  formatBlockNumber = oo7parity.formatBlockNumber;
+// Assume React is already required.
+var oo7react = require('oo7-react'),
+	setupBonds = oo7parity.setupBonds,
+	formatBlockNumber = oo7parity.formatBlockNumber;
 
-  class DateFormatter extends ReactiveComponent {
-	  constructor() {
-		  // Tell the object to look out for 'date' prop and keep the 'date'
-		  // state up to date.
-		  super(['date']);
-	  }
-	  render() {
-		  return this.state.date === null ?
-		    <div>Date unknown</div> :
-		    <div>The date is {this.state.date}</div>;
-	  }
-  }
+class DateFormatter extends ReactiveComponent {
+	constructor() {
+		// Tell the object to look out for 'date' prop and keep the 'date'
+		// state up to date.
+		super(['date']);
+	}
+	render() {
+		return this.state.date === null ?
+			<div>Date unknown</div> :
+			<div>The date is {this.state.date}</div>;
+	}
+}
 
-  class App extends React.Component {
-	  render() {
-		  // Evaluates to a pretty datetime.
-		  let b = (new TimeBond).map(t => new Date(t) + '');
-		  // Prints two clocks. They both print the time and stay up to date.
-		  return (<div>
-			  <DateFormatter date={b} />
-			  <div>The date is: <Reactive value={b} /></div>
-			</div>)
-	  }
-  }
+class App extends React.Component {
+	render() {
+		// Evaluates to a pretty datetime.
+		let b = (new TimeBond).map(t => new Date(t) + '');
+		// Prints two clocks. They both print the time and stay up to date.
+		return (<div>
+			<DateFormatter date={b} />
+			<div>The date is: <Reactive value={b} /></div>
+		</div>)
+	}
+}
 ```
 
 ## Tests
 
 ```sh
-  npm test
+npm test
 ```
 
 ## Contributing
