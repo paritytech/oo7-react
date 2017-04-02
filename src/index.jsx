@@ -47,7 +47,7 @@ export class Rspan extends ReactiveComponent {
 				className={this.state.className}
 				style={this.state.style}
 				name={this.props.name}
-			>{''+this.state.children}</span>
+			>{this.state.children}</span>
 		);
 	}
 }
@@ -60,7 +60,7 @@ export class Rdiv extends ReactiveComponent {
 				className={this.state.className}
 				style={this.state.style}
 				name={this.props.name}
-			>{''+this.state.children}</div>
+			>{this.state.children}</div>
 		);
 	}
 }
@@ -77,7 +77,7 @@ export class Ra extends ReactiveComponent {
 				className={this.state.className}
 				style={this.state.style}
 				name={this.props.name}
-			>{''+this.state.children}</a>
+			>{this.state.children}</a>
 		);
 	}
 }
