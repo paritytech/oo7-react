@@ -222,6 +222,13 @@ HashBond.defaultProps = {
 	validator: v => v.startsWith('0x') && v.length == 66
 };
 
+export class AddressBond extends TextBond {}
+AddressBond.defaultProps = {
+	floatingLabelText: 'Enter an address to look up',
+	invalidText: 'Invalid address',
+	validator: parity.api.util.isAddressValid
+};
+
 export class URLBond extends TextBond {}
 URLBond.defaultProps = {
 	floatingLabelText: 'Enter a URL',
