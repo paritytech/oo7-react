@@ -1,5 +1,5 @@
 import React from 'react';
-import {Bond, TimeBond, ReactiveBond, TransformBond} from 'oo7';
+import { ReactiveBond } from 'oo7';
 
 /**
  * @summary A derivable class for creating React components that can transparently
@@ -45,7 +45,7 @@ export class ReactiveComponent extends React.Component {
 	 *   readyRender() { return <span>{this.state.time.toString()}</span>; }
  	 * }
 	 */
-	constructor(reactiveProps = [], bonds = {}) {
+	constructor (reactiveProps = [], bonds = {}) {
 		super();
 		this.reactiveProps = reactiveProps;
 		this.bonds = bonds;
@@ -58,7 +58,7 @@ export class ReactiveComponent extends React.Component {
 	 * Ensure that any further derivations of this function call this superclass
 	 * implementation.
 	 */
-	componentWillMount() {
+	componentWillMount () {
 		this.initProps();
 	}
 
@@ -68,7 +68,7 @@ export class ReactiveComponent extends React.Component {
 	 * Ensure that any further derivations of this function call this superclass
 	 * implementation.
 	 */
-	componentWillReceiveProps(nextProps) {
+	componentWillReceiveProps (nextProps) {
 		this.updateProps(nextProps);
 	}
 
@@ -78,7 +78,7 @@ export class ReactiveComponent extends React.Component {
 	 * Ensure that any further derivations of this function call this superclass
 	 * implementation.
 	 */
-	componentWillUnmount() {
+	componentWillUnmount () {
 		this.finiProps();
 	}
 
@@ -128,7 +128,7 @@ export class ReactiveComponent extends React.Component {
 	 * @returns {boolean} - `true` if and only if all props, specifically those
 	 * which are {@link Bond} values and which are {@link Bond} aware, are _ready_.
 	 */
-	ready() {
+	ready () {
 		return this.allBondKeys.every(k => this.state[k] !== undefined);
 	}
 
@@ -138,7 +138,7 @@ export class ReactiveComponent extends React.Component {
 	 * This will only be called when all {@link Bond}-aware props are _ready_ and
 	 * have a corresponding value in `this.state`.
 	 */
-	readyRender() {
+	readyRender () {
 		return this.unreadyRender();
 	}
 
@@ -147,7 +147,7 @@ export class ReactiveComponent extends React.Component {
 	 *
 	 * This will only be called when not all {@link Bond}-aware props are _ready_.
 	 */
-	unreadyRender() {
+	unreadyRender () {
 		return (<span />);
 	}
 
@@ -155,7 +155,7 @@ export class ReactiveComponent extends React.Component {
 	 * Overridden function from React.Component. Render the object with present
 	 * state and props.
 	 */
-	render() {
+	render () {
 		return this.ready() ? this.readyRender() : this.unreadyRender();
 	}
 }
@@ -172,8 +172,11 @@ export class ReactiveComponent extends React.Component {
  * }
  */
 export class Rspan extends ReactiveComponent {
-    constructor() { super(['className', 'style', 'children']); }
-	render() {
+	constructor () {
+		super(['className', 'style', 'children']);
+	}
+
+	render () {
 		return (
 			<span
 				className={this.state.className}
@@ -196,8 +199,11 @@ export class Rspan extends ReactiveComponent {
  * }
  */
 export class Rdiv extends ReactiveComponent {
-    constructor() { super(['className', 'style', 'children']); }
-	render() {
+	constructor () {
+		super(['className', 'style', 'children']);
+	}
+
+	render () {
 		return (
 			<div
 				className={this.state.className}
@@ -215,10 +221,11 @@ export class Rdiv extends ReactiveComponent {
  * expected but are {@link Bond}-aware.
  */
 export class Ra extends ReactiveComponent {
-	constructor() {
+	constructor () {
 		super(['href', 'target', 'className', 'style', 'children']);
 	}
-	render() {
+
+	render () {
 		return (
 			<a
 				href={this.state.href}
@@ -238,10 +245,11 @@ export class Ra extends ReactiveComponent {
  * expected but are {@link Bond}-aware.
  */
 export class Rimg extends ReactiveComponent {
-	constructor() {
+	constructor () {
 		super(['src', 'className', 'style']);
 	}
-	render() {
+
+	render () {
 		return (
 			<img
 				src={this.state.src}
@@ -261,12 +269,13 @@ export class Rimg extends ReactiveComponent {
  * `value`, `className` and `style` props behave as expected but are {@link Bond}-aware.
  */
 export class Hash extends ReactiveComponent {
-	constructor() {
+	constructor () {
 		super(['value', 'className', 'style']);
 	}
-	render() {
+
+	render () {
 		let v = this.state.value;
-		let d = typeof(v) === 'string' && v.startsWith('0x') && v.length >= 18
+		let d = typeof v === 'string' && v.startsWith('0x') && v.length >= 18
 			? v.substr(0, 8) + '…' + v.substr(v.length - 4)
 			: v;
 		return (
