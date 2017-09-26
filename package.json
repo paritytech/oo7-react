@@ -2,13 +2,13 @@
   "name": "oo7-react",
   "version": "0.4.4",
   "description": "The Reactive Bond API",
-  "main": "lib/index.js",
+  "main": "index.js",
   "files": [
     "lib/*"
   ],
   "scripts": {
     "test": "npm run compile && mocha --compilers js:babel-core/register  --reporter spec",
-    "compile": "babel --presets env,react -d lib/ src/",
+    "compile": "babel --presets env,react -d build/ lib/",
     "prepublish": "npm run compile"
   },
   "repository": {
