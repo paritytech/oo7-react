@@ -1,6 +1,6 @@
 {
   "name": "oo7-react",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "The Reactive Bond API",
   "main": "lib/index.js",
   "files": [
@@ -9,13 +9,14 @@
   "scripts": {
     "test": "npm run compile && mocha --compilers js:babel-core/register  --reporter spec",
     "compile": "babel --presets react -d lib/ src/",
-    "prepublishOnly": "../oo7/prepublish.sh",
-    "prepare": "npm run compile",
-    "postpublish": "../oo7/postpublish.sh"
+    "prepublishOnly": "echo prepublishOnly && ../oo7/prepublish.sh",
+    "prepublish": "echo prepublish && npm run compile",
+    "prepare": "echo prepare && npm run compile",
+    "postpublish": "echo postpublish && ../oo7/postpublish.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ethcore/oo7-react.git"
+    "url": "git+https://github.com/paritytech/oo7-react.git"
   },
   "keywords": [
     "Promise",
@@ -27,9 +28,9 @@
   "author": "Parity Technologies <admin@parity.io> (https://parity.io/)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/ethcore/oo7-react/issues"
+    "url": "https://github.com/paritytech/oo7-react/issues"
   },
-  "homepage": "https://github.com/ethcore/oo7-react#readme",
+  "homepage": "https://github.com/paritytech/oo7-react#readme",
   "dependencies": {
     "oo7": "file:../oo7",
     "react": "^15.4.2"
