@@ -1,41 +1,43 @@
 const React = require('react');
-const {Bond, TimeBond, ReactiveBond, TransformBond} = require('oo7');
+const {Bond, BondCache, TimeBond, ReactiveBond, TransformBond} = require('oo7');
 
 /**
  * React element in which app should be placed if it needs to wait for the parent
  * frame to inject the BondCache.
  */
-class InjectedCacheWaiter extends React.Component {
+class SetupBondCache extends React.Component {
 	constructor () {
 		super();
 
-		this.state = { haveCache: window ? window.injectedBondCache ? true : null : false };
+		this.state = { haveCache: window && window.parent ? null : false };
 
 		if (this.state.haveCache === null) {
-			this._timers = [
-				window.setInterval(this.checkInject.bind(this), 100),
-				window.setInterval(this.checksTimeout.bind(this), 2000)
-			];
-		}
-	}
-
-	checkInject () {
-		if (window.injectedBondCache) {
-			Bond.cache = window.injectedBondCache;
-			this._timers.forEach(window.clearInterval);
-			this.setState({haveCache: true});
+			this._timer = window.setInterval(this.checksTimeout.bind(this), 2000);
+			this._listener = this.onMessage.bind(this);
+			window.addEventListener('message', this._listener);
+			window.postMessage({ queryBondProxy: null });
 		}
 	}
 
 	checksTimeout () {
-		this._timers.forEach(window.clearInterval);
+		window.clearInterval(this._timer);
+		window.removeEventListener('messsage', this._listener);
 		this.setState({haveCache: false});
 	}
 
 	render () {
 		return this.state.haveCache === null
-			? <div>Waiting for cache...</div>
+			? <div style={{position: 'fixed', height: '100vh', width: '100vw', display: 'flex'}}><div style={{margin: 'auto', color: '#aaa', fontSize: 'x-large'}}>Waiting for cache...</div></div>
 			: this.props.children;
+	}
+
+	onMessage (e) {
+		if (e.source === window.parent && e.data.bondProxyInfo) {
+			window.clearInterval(this._timer);
+			window.removeEventListener('messsage', this._listener);
+			Bond.cache = new BondCache(Bond.backupStorage, e.data.bondProxyInfo);
+			this.setState({haveCache: true});
+		}
 	}
 }
 

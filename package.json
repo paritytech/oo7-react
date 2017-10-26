@@ -1,6 +1,6 @@
 {
   "name": "oo7-react",
-  "version": "0.4.8",
+  "version": "0.4.7",
   "description": "The Reactive Bond API",
   "main": "lib/index.js",
   "files": [
@@ -9,10 +9,10 @@
   "scripts": {
     "test": "npm run compile && mocha --compilers js:babel-core/register  --reporter spec",
     "compile": "babel --presets react -d lib/ src/",
-    "prepublishOnly": "echo prepublishOnly && ../oo7/prepublish.sh",
-    "prepublish": "echo prepublish && npm run compile",
-    "prepare": "echo prepare && npm run compile",
-    "postpublish": "echo postpublish && ../oo7/postpublish.sh"
+    "prepublishOnly": "../oo7/prepublish.sh",
+    "prepare": "npm run compile",
+    "postpublish": "../oo7/postpublish.sh",
+    "watch": "watch 'npm run compile' lib"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
     "babel-cli": "^6.22.2",
     "babel-preset-react": "^6.22.0",
     "chai": "^3.5.0",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "npm-watch": "^0.3.0"
   }
 }
