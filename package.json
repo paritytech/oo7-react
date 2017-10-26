@@ -12,7 +12,7 @@
     "prepublishOnly": "../oo7/prepublish.sh",
     "prepare": "npm run compile",
     "postpublish": "../oo7/postpublish.sh",
-    "watch": "watch 'npm run compile' lib"
+    "watch": "watch 'npm run compile' src/ node_modules/"
   },
   "repository": {
     "type": "git",
@@ -40,6 +40,6 @@
     "babel-preset-react": "^6.22.0",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
-    "npm-watch": "^0.3.0"
+    "watch": "^1.0.2"
   }
 }
