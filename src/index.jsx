@@ -324,5 +324,5 @@ Hash.defaultProps = {
 };
 
 module.exports = {
-	InjectedCacheWaiter, ReactiveComponent, Rspan, Rdiv, Ra, Rimg, Hash
+	SetupBondCache, ReactiveComponent, Rspan, Rdiv, Ra, Rimg, Hash
 };
