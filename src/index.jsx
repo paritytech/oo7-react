@@ -13,15 +13,15 @@ class SetupBondCache extends React.Component {
 
 		if (this.state.haveCache === null) {
 			this._timer = window.setInterval(this.checksTimeout.bind(this), 2000);
-			this._listener = this.onMessage.bind(this);
-			window.addEventListener('message', this._listener);
-			window.postMessage({ queryBondProxy: null });
+			this.onMessage = this.onMessage.bind(this);
+			window.addEventListener('message', this.onMessage);
+			window.parent.postMessage({ helloBondProxy: true }, '*');
 		}
 	}
 
 	checksTimeout () {
 		window.clearInterval(this._timer);
-		window.removeEventListener('messsage', this._listener);
+		window.removeEventListener('messsage', this.onMessage);
 		this.setState({haveCache: false});
 	}
 
@@ -34,8 +34,8 @@ class SetupBondCache extends React.Component {
 	onMessage (e) {
 		if (e.source === window.parent && e.data.bondProxyInfo) {
 			window.clearInterval(this._timer);
-			window.removeEventListener('messsage', this._listener);
-			Bond.cache = new BondCache(Bond.backupStorage, e.data.bondProxyInfo);
+			window.removeEventListener('messsage', this.onMessage);
+			Bond.cache = new BondCache(Bond.backupStorage, e.data.bondProxyInfo.deferParentPrefix);
 			this.setState({haveCache: true});
 		}
 	}
