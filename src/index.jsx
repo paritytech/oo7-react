@@ -127,10 +127,16 @@ class ReactiveComponent extends React.Component {
 		let that = this;
 		let bonds = this.bonds;
 		let bondKeys = Object.keys(bonds);
-		this._consolidatedExtraBonds = new ReactiveBond(bondKeys.map(f => bonds[f]), [], a => {
-			var s = that.state || {};
-			bondKeys.forEach((f, i) => { s[f] = a[i]; });
-			that.setState(s);
+		this.setState({ _extraReady: false });
+		this._consolidatedExtraBonds = new ReactiveBond(bondKeys.map(f => bonds[f]), [], {
+			ready: a => {
+				var s = { _extraReady: true };
+				bondKeys.forEach((f, i) => { s[f] = a[i]; });
+				that.setState(s);
+			},
+			reset: () => {
+				that.setState({ _extraReady: false });
+			}
 		}).use();
 	}
 
@@ -155,10 +161,17 @@ class ReactiveComponent extends React.Component {
 			this._consolidatedBonds.drop();
 			delete this._consolidatedBonds;
 		}
-		this._consolidatedBonds = new ReactiveBond(this.reactiveProps.map(f => nextProps[f]), [], a => {
-			var s = that.state || {};
-			that.reactiveProps.forEach((f, i) => { s[f] = a[i]; });
-			that.setState(s);
+		this.setState({ _ready: false });
+
+		this._consolidatedBonds = new ReactiveBond(this.reactiveProps.map(f => nextProps[f]), [], {
+			ready: a => {
+				var s = { _ready: true };
+				that.reactiveProps.forEach((f, i) => { s[f] = a[i]; });
+				that.setState(s);
+			},
+			reset: () => {
+				that.setState({ _ready: false });
+			}
 		}).use();
 	}
 
@@ -169,7 +182,7 @@ class ReactiveComponent extends React.Component {
 	 * which are {@link Bond} values and which are {@link Bond} aware, are _ready_.
 	 */
 	ready() {
-		return this.allBondKeys.every(k => this.state[k] !== undefined);
+		return this.state._ready && this.state._extraReady;
 	}
 
 	/**
@@ -201,7 +214,49 @@ class ReactiveComponent extends React.Component {
 }
 
 /**
+ * {@link Bond}-aware resolver component.
+ *
+ * @example
+ * class Clock extends React.Component {
+ *   render () { return <Resolve content={(new TimeBond).map(_=>_.toString())} as='div' />; }
+ * }
+ */
+class Resolve extends ReactiveComponent {
+    constructor () { super(['className', 'style', 'content']); }
+	render () {
+		return (
+			<this.props.as
+				className={this.state.className}
+				style={this.state.style}
+				name={this.props.name}
+			>{this.ready() ? this.state.content : null}</this.props.as>
+		);
+	}
+}
+Resolve.defaultProps = {
+	as: 'div'
+};
+
+/**
+ * Simple class to render a single child (don't try multiple - it won't work)
+ * when a given {@link Bond} is ready.
+ */
+class IfReady extends ReactiveComponent {
+	constructor () {
+		super(['bond']);
+	}
+	readyRender () {
+		return this.props.children;
+	}
+	unreadyRender () {
+		return this.props.placeholder || null;
+	}
+}
+
+/**
  * {@link Bond}-aware, variant of `span` component.
+ *
+ * DEPRECATED: Use `Resolve` instead.
  *
  * `className` and `style` props, and the child, behave as expected but are
  * {@link Bond}-aware.
@@ -212,7 +267,11 @@ class ReactiveComponent extends React.Component {
  * }
  */
 class Rspan extends ReactiveComponent {
-    constructor() { super(['className', 'style', 'children']); }
+    constructor() {
+		super(['className', 'style', 'children']);
+
+		console.warn('<Rspan> element is deprecated. It will be removed in the next minor relase. Use <Resolve> instead.');
+	}
 	render() {
 		return (
 			<span
@@ -236,7 +295,10 @@ class Rspan extends ReactiveComponent {
  * }
  */
 class Rdiv extends ReactiveComponent {
-    constructor() { super(['className', 'style', 'children']); }
+    constructor() {
+		super(['className', 'style', 'children']);
+		console.warn('<Rdiv> element is deprecated. It will be removed in the next minor relase. Use <Resolve> instead.');
+	}
 	render() {
 		return (
 			<div
@@ -324,5 +386,5 @@ Hash.defaultProps = {
 };
 
 module.exports = {
-	SetupBondCache, ReactiveComponent, Rspan, Rdiv, Ra, Rimg, Hash
+	SetupBondCache, Resolve, IfReady, ReactiveComponent, Rspan, Rdiv, Ra, Rimg, Hash
 };
